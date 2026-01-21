@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="https://raw.githubusercontent.com/mohamednoorulnaseem/airfoil-rl-optimizer/main/docs/assets/logo.svg" alt="Airfoil RL Optimizer" width="600"/>
+<img src="docs/assets/banner.png" alt="Airfoil RL Optimizer" width="100%"/>
 
 # ✈️ Airfoil RL Optimizer
 
@@ -29,7 +29,38 @@ _Industry-grade aerodynamic optimization achieving 36.9% L/D improvement with CF
 
 ---
 
-## 📑 Table of Contents
+## � Project Showcase
+
+<div align="center">
+
+<table>
+<tr>
+<td width="50%">
+<img src="docs/assets/airfoil_comparison.png" alt="Airfoil Comparison" width="100%"/>
+<p align="center"><i>Baseline vs Optimized Airfoil</i></p>
+</td>
+<td width="50%">
+<img src="docs/assets/performance_envelope.png" alt="Performance" width="100%"/>
+<p align="center"><i>Performance Across Flight Envelope</i></p>
+</td>
+</tr>
+<tr>
+<td width="50%">
+<img src="docs/assets/training_progress.png" alt="Training" width="100%"/>
+<p align="center"><i>RL Training Progress</i></p>
+</td>
+<td width="50%">
+<img src="docs/assets/economics.png" alt="Economics" width="100%"/>
+<p align="center"><i>Fleet Economic Impact</i></p>
+</td>
+</tr>
+</table>
+
+</div>
+
+---
+
+## �📑 Table of Contents
 
 - [🎯 Highlights](#-highlights)
 - [⚡ Quick Start](#-quick-start)
@@ -128,6 +159,22 @@ action, _ = agent.predict(obs)
 print(f"Optimized parameters: {action}")  # [camber, position, thickness]
 ```
 
+### 📸 Visual Results
+
+<div align="center">
+
+<img src="docs/assets/airfoil_comparison.png" alt="Airfoil Comparison" width="90%"/>
+
+*Baseline NACA 2412 vs RL-Optimized Airfoil showing 36.9% L/D improvement*
+
+<br><br>
+
+<img src="docs/assets/training_progress.png" alt="Training Progress" width="90%"/>
+
+*PPO Training Progress: Reward convergence and L/D improvement over 50,000 timesteps*
+
+</div>
+
 ---
 
 ## 🎬 Live Demo
@@ -138,7 +185,7 @@ print(f"Optimized parameters: {action}")  # [camber, position, thickness]
 
 Try it yourself: **[Launch Demo](http://demo.airfoil-optimizer.com)** _(Coming Soon)_
 
-<img src="docs/assets/demo.gif" alt="Demo Animation" width="800"/>
+<img src="docs/assets/demo_preview.png" alt="Demo Dashboard" width="100%"/>
 
 _Real-time airfoil optimization with CFD validation_
 
@@ -267,6 +314,10 @@ graph TB
 
 
 ```
+
+*Or view the detailed system architecture:*
+
+<img src="docs/assets/architecture.png" alt="System Architecture" width="90%"/>
 
 </div>
 
@@ -496,6 +547,16 @@ _L/D performance validated across Reynolds 10⁵-6×10⁶ and Mach 0.0-0.8_
 |   🌍 **CO₂ Reduction**   |   1.9M tonnes    | 2.1M tonnes  |  2.3M tonnes   |
 |    ⛽ **Fuel Saved**     |   620M gallons   | 690M gallons |  760M gallons  |
 | 📊 **NPV (7% discount)** |      $285M       |    $380M     |     $475M      |
+
+</div>
+
+<br>
+
+<div align="center">
+
+<img src="docs/assets/economics.png" alt="Fleet Economics" width="90%"/>
+
+*Economic impact visualization: Annual savings and fleet-scale benefits*
 
 </div>
 
