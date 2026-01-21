@@ -15,47 +15,96 @@ plt.rcParams['font.family'] = 'sans-serif'
 plt.rcParams['font.sans-serif'] = ['Arial', 'DejaVu Sans']
 
 def generate_banner():
-    """Generate professional README banner"""
-    fig = plt.figure(figsize=(16, 4))
-    ax = fig.add_subplot(111)
-    ax.set_xlim(0, 16)
-    ax.set_ylim(0, 4)
+    """Generate stunning professional README banner with modern design"""
+    fig = plt.figure(figsize=(20, 5), facecolor='#0a0e27')
+    ax = fig.add_subplot(111, facecolor='#0a0e27')
+    ax.set_xlim(0, 20)
+    ax.set_ylim(0, 5)
     ax.axis('off')
     
-    # Background gradient
-    gradient = np.linspace(0, 1, 256).reshape(1, -1)
-    gradient = np.vstack((gradient, gradient))
-    ax.imshow(gradient, extent=[0, 16, 0, 4], aspect='auto', cmap='Blues', alpha=0.3)
+    # Modern gradient background with depth
+    gradient_colors = ['#0a0e27', '#1a1f4d', '#2a3f7d', '#1a1f4d', '#0a0e27']
+    for i in range(len(gradient_colors)-1):
+        y_start = i * 5 / (len(gradient_colors)-1)
+        y_end = (i+1) * 5 / (len(gradient_colors)-1)
+        ax.axhspan(y_start, y_end, facecolor=gradient_colors[i], alpha=0.8)
     
-    # Title
-    ax.text(8, 2.5, '✈️ Airfoil RL Optimizer', 
-            fontsize=48, fontweight='bold', ha='center', va='center',
-            color='#1a1a1a')
+    # Geometric accent lines (aerospace aesthetic)
+    for y in [0.5, 4.5]:
+        ax.plot([1, 19], [y, y], color='#00d9ff', linewidth=1, alpha=0.3)
     
-    # Subtitle
-    ax.text(8, 1.5, 'Physics-Informed Reinforcement Learning for Aerospace Design',
-            fontsize=20, ha='center', va='center', color='#333333', style='italic')
+    # Circuit-like design elements
+    for x in [2, 18]:
+        ax.plot([x, x], [1, 4], color='#00d9ff', linewidth=1, alpha=0.2)
     
-    # Key metrics
+    # Stylized airfoil shape in background
+    x_airfoil = np.linspace(0.5, 3.5, 50)
+    y_upper = 3.5 + 0.3 * np.sin((x_airfoil - 0.5) * np.pi)
+    y_lower = 1.5 - 0.3 * np.sin((x_airfoil - 0.5) * np.pi)
+    ax.fill_between(x_airfoil, y_lower, y_upper, color='#00d9ff', alpha=0.05)
+    ax.plot(x_airfoil, y_upper, color='#00d9ff', linewidth=2, alpha=0.2)
+    ax.plot(x_airfoil, y_lower, color='#00d9ff', linewidth=2, alpha=0.2)
+    
+    # Main title with glow effect
+    ax.text(10, 3.3, 'AIRFOIL RL OPTIMIZER', 
+            fontsize=56, fontweight='bold', ha='center', va='center',
+            color='#ffffff', family='sans-serif',
+            bbox=dict(boxstyle='round,pad=0.3', facecolor='none', 
+                     edgecolor='#00d9ff', linewidth=2, alpha=0.3))
+    
+    # Subtitle with tech aesthetic
+    ax.text(10, 2.3, 'PHYSICS-INFORMED REINFORCEMENT LEARNING', 
+            fontsize=18, ha='center', va='center', 
+            color='#00d9ff', family='monospace', weight='bold',
+            bbox=dict(boxstyle='round,pad=0.2', facecolor='#1a1f4d', 
+                     edgecolor='#00d9ff', linewidth=1, alpha=0.5))
+    ax.text(10, 1.95, 'Next-Generation Aerospace Design Optimization',
+            fontsize=14, ha='center', va='center', color='#a0a0ff', style='italic')
+    
+    # Key metrics with modern boxes
     metrics = [
-        ('36.9% L/D', 'Improvement'),
-        ('$540M', 'Fleet Savings'),
-        ('62% Faster', 'PINN Speedup'),
-        ('<2%', 'CFD Error')
+        ('36.9%', 'L/D GAIN', '#00ff88'),
+        ('$540M', 'SAVINGS', '#ffd700'),
+        ('62%', 'SPEEDUP', '#ff6b00'),
+        ('<2%', 'ERROR', '#00d9ff')
     ]
     
-    x_positions = np.linspace(2, 14, len(metrics))
-    for i, (value, label) in enumerate(metrics):
-        ax.text(x_positions[i], 0.7, value, 
-                fontsize=16, fontweight='bold', ha='center', color='#0066cc')
-        ax.text(x_positions[i], 0.3, label,
-                fontsize=11, ha='center', color='#666666')
+    x_positions = np.linspace(4.5, 15.5, len(metrics))
+    for i, (value, label, color) in enumerate(metrics):
+        # Metric box with border
+        box = FancyBboxPatch((x_positions[i]-0.85, 0.4), 1.7, 0.9,
+                            boxstyle="round,pad=0.05", 
+                            facecolor='#1a1f4d', edgecolor=color,
+                            linewidth=2, alpha=0.8)
+        ax.add_patch(box)
+        
+        # Value
+        ax.text(x_positions[i], 1.05, value, 
+                fontsize=20, fontweight='bold', ha='center', va='center',
+                color=color, family='monospace')
+        # Label
+        ax.text(x_positions[i], 0.65, label,
+                fontsize=9, ha='center', va='center', 
+                color='#ffffff', weight='bold', family='sans-serif')
     
-    plt.tight_layout()
+    # Tech badges/stamps
+    ax.text(18.5, 4.2, 'CFD', fontsize=10, ha='center', 
+           color='#00ff88', weight='bold',
+           bbox=dict(boxstyle='round,pad=0.3', facecolor='#1a1f4d', 
+                    edgecolor='#00ff88', linewidth=1.5))
+    ax.text(18.5, 3.7, 'VALIDATED', fontsize=7, ha='center', color='#00ff88')
+    
+    ax.text(1.5, 4.2, 'MIT', fontsize=10, ha='center', 
+           color='#ffd700', weight='bold',
+           bbox=dict(boxstyle='round,pad=0.3', facecolor='#1a1f4d', 
+                    edgecolor='#ffd700', linewidth=1.5))
+    ax.text(1.5, 3.7, 'LICENSED', fontsize=7, ha='center', color='#ffd700')
+    
+    plt.tight_layout(pad=0)
     plt.savefig('docs/assets/banner.png', dpi=300, bbox_inches='tight', 
-                facecolor='white', edgecolor='none')
+                facecolor='#0a0e27', edgecolor='none')
     plt.close()
-    print("✅ Generated banner.png")
+    print("✅ Generated stunning banner.png")
 
 
 def generate_airfoil_comparison():
