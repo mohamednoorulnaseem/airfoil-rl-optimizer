@@ -1,0 +1,29 @@
+version: "3.8"
+
+services:
+  # Web Application
+  app:
+    build: .
+    ports:
+      - "8050:8050"
+    volumes:
+      - .:/app
+    environment:
+      - DEBUG=True
+    command: python app.py
+
+  # RL Training Job (Run manually or as needed)
+  trainer:
+    build: .
+    volumes:
+      - .:/app
+    command: python train_rl.py
+
+  # Jupyter Notebook Environment
+  jupyter:
+    build: .
+    ports:
+      - "8888:8888"
+    volumes:
+      - .:/app
+    command: pip install notebook && jupyter notebook --ip=0.0.0.0 --port=8888 --no-browser --allow-root

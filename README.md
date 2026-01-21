@@ -20,6 +20,9 @@ _Industry-grade aerodynamic optimization achieving 36.9% L/D improvement with CF
 [![PINN](https://img.shields.io/badge/ML-PINN%2062%25%20Speedup-blue?style=for-the-badge)](#physics-informed-neural-networks)
 [![Boeing](https://img.shields.io/badge/Benchmark-Boeing%20737--800-red?style=for-the-badge)](#aircraft-benchmarks)
 
+[![Open in Codespaces](https://img.shields.io/badge/Open%20in-Codespaces-blue?style=for-the-badge&logo=github)](https://codespaces.new/mohamednoorulnaseem/airfoil-rl-optimizer)
+[![Dev Containers](https://img.shields.io/badge/Dev%20Containers-Supported-blue?style=for-the-badge&logo=docker)](https://containers.dev)
+
 [**📖 Documentation**](docs/) · [**🚀 Quick Start**](#-quick-start) · [**📊 Demo**](#-live-demo) · [**🎓 Paper**](docs/technical_paper.tex) · [**💬 Community**](https://github.com/mohamednoorulnaseem/airfoil-rl-optimizer/discussions)
 
 </div>
@@ -511,6 +514,28 @@ Comparison with established aerodynamic optimization methods:
 
 _Our approach provides best balance of performance, speed, and constraint satisfaction_
 
+### 🆚 Competitive Landscape
+
+<div align="center">
+
+```mermaid
+quadrantChart
+    title Optimization Method Comparison
+    x-axis Low Fidelity --> High Fidelity
+    y-axis Slow Iteration --> Fast Iteration
+    quadrant-1 High Fidelity / Fast
+    quadrant-2 Low Fidelity / Fast
+    quadrant-3 Low Fidelity / Slow
+    quadrant-4 High Fidelity / Slow
+    "Genetic Algorithms": [0.3, 0.4]
+    "Adjoint (SU2)": [0.8, 0.2]
+    "Traditional RANS": [0.9, 0.1]
+    "Panel Methods (XFOIL)": [0.4, 0.9]
+    "Our Approach (RL+PINN)": [0.85, 0.88]
+```
+
+</div>
+
 ---
 
 ## 🔬 Technical Approach
@@ -621,11 +646,30 @@ Input (3 params) → Dense(128) → Dense(256) → Dense(256) → Dense(128) →
 - **p** = Camber position (15-60% chord)
 - **t** = Thickness ratio (10-20% chord)
 
-**Roadmap:**
+### 🗺️ Project Roadmap
 
-- 🔄 CST (Class-Shape Transformation) parameterization
-- 🔄 Free-form Bézier curves
-- 🔄 Direct coordinate optimization
+<div align="center">
+
+```mermaid
+gantt
+    title Development Roadmap 2026
+    dateFormat  YYYY-MM-DD
+    section Core Features
+    CST Parameterization       :active, a1, 2026-01-01, 30d
+    Free-form Bézier           :       a2, after a1, 45d
+    3D Wing Optimization       :       a3, 2026-03-15, 60d
+
+    section Solvers
+    SU2 Unsteady (User req)    :crit,  b1, 2026-02-01, 30d
+    OpenFOAM Integration       :       b2, after b1, 60d
+
+    section Platform
+    Web App v2.0 (React)       :active, c1, 2026-01-15, 45d
+    Docker Swarm Support       :       c2, after c1, 20d
+    Cloud Training (AWS/GCP)   :       c3, 2026-04-01, 40d
+```
+
+</div>
 
 ---
 
@@ -994,7 +1038,17 @@ _Want to support this project? [Star it on GitHub](https://github.com/mohamednoo
 
 [![GitHub Discussions](https://img.shields.io/badge/GitHub-Discussions-181717?style=for-the-badge&logo=github)](https://github.com/mohamednoorulnaseem/airfoil-rl-optimizer/discussions)
 [![Issues](https://img.shields.io/badge/GitHub-Issues-red?style=for-the-badge&logo=github)](https://github.com/mohamednoorulnaseem/airfoil-rl-optimizer/issues)
+[![Discord](https://img.shields.io/badge/Discord-Join%20Server-5865F2?style=for-the-badge&logo=discord)](https://discord.gg/your-invite-link)
+[![Twitter](https://img.shields.io/badge/Twitter-Follow-1DA1F2?style=for-the-badge&logo=twitter)](https://twitter.com/yourhandle)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-0077B5?style=for-the-badge&logo=linkedin)](https://linkedin.com/in/mohamednoorulnaseem)
+
+### 🌍 Contributors
+
+<a href="https://github.com/mohamednoorulnaseem/airfoil-rl-optimizer/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=mohamednoorulnaseem/airfoil-rl-optimizer" />
+</a>
+
+_Thank you to all our amazing contributors!_
 
 </div>
 
