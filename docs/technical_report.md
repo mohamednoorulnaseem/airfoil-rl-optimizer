@@ -264,7 +264,3 @@ We demonstrated a production-grade RL framework for aerodynamic optimization ach
 - `app.py` - Interactive Streamlit application
 
 ---
-
-## Appendix B: Resume Bullet Point
-
-> Engineered multi-objective reinforcement learning framework integrating PPO agent with XFOIL CFD validation and physics-informed neural network surrogate for NACA airfoil geometry optimization. Achieved 18% drag reduction and 37% lift-to-drag improvement over Boeing 737-800 baseline wing section, validated across Re=10⁵-6×10⁶ flight envelope. Implemented manufacturing constraints and uncertainty quantification achieving <2% deviation from simulated wind tunnel testing. Estimated $540 million fuel savings potential for 500-aircraft commercial fleet over 25-year operational lifetime.
