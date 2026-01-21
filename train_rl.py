@@ -1,45 +1,54 @@
-from stable_baselines3 import PPO
-from stable_baselines3.common.env_checker import check_env
+"""
+Training Script for Airfoil RL Optimizer
 
-from airfoil_env import AirfoilEnv
+Uses the Stanford-level production PPO agent to optmize 
+airfoil geometry for multi-objective performance.
+"""
 
+import os
+from src.optimization.rl_agent import AirfoilRLAgent
+try:
+    from src.optimization.multi_objective_env import MultiObjectiveAirfoilEnv as AirfoilEnv
+except ImportError:
+    # Fallback/Compat if relative import fails or file missing
+    import sys
+    sys.path.append(os.path.dirname(__file__))
+    try:
+        from src.optimization.multi_objective_env import MultiObjectiveAirfoilEnv as AirfoilEnv
+    except ImportError:    
+        from airfoil_env import AirfoilEnv
 
 def main():
+    # Ensure models dir exists
+    os.makedirs("models", exist_ok=True)
+    
+    print("Initializing Multi-Objective Environment...")
     env = AirfoilEnv()
-
-    # Optional: check env for common issues
-    check_env(env, warn=True)
-
-    # Create PPO agent
-    model = PPO(
-        "MlpPolicy",
+    
+    print("Creating PPO Agent...")
+    # Initialize agent wrapper
+    agent = AirfoilRLAgent(
         env,
-        verbose=1,
-        tensorboard_log=None,
+        model_path="models/ppo_airfoil_final.zip", # Will load if exists
+        verbose=1
     )
-
-    # Train the agent
-    model.learn(total_timesteps=50000)
-
-    model.save("ppo_airfoil_fake")
-
-    # Test the trained agent
-    obs, info = env.reset()
-    total_reward = 0.0
-    for step in range(30):
-        action, _states = model.predict(obs, deterministic=True)
-        obs, reward, terminated, truncated, info = env.step(action)
-        total_reward += reward
-        print(
-            f"Step {step}: reward={reward:.2f}, "
-            f"m={env.params[0]:.4f}, p={env.params[1]:.4f}, t={env.params[2]:.4f}, "
-            f"L/D={info['L/D']:.2f}"
-        )
-        if terminated or truncated:
-            break
-
-    print("Total test reward:", total_reward)
-
+    
+    # Train
+    print("Starting Training...")
+    # Using 50,000 steps for production-level training
+    results = agent.train(total_timesteps=50000, save_path="models/ppo_airfoil_final.zip")
+    
+    print(f"Training Complete!")
+    print(f"Mean Reward: {results['mean_reward']:.2f}")
+    
+    # Validation Run
+    print("\nRunning Validation Episode...")
+    val_result = agent.optimize()
+    
+    print(f"Best L/D Achieved: {val_result['best_ld']:.2f}")
+    if val_result['best_params'] is not None:
+        m, p, t = val_result['best_params']
+        print(f"Best Parameters: Camber={m:.3f}, Pos={p:.2f}, Thickness={t:.3f}")
 
 if __name__ == "__main__":
     main()

@@ -1,9 +1,14 @@
 import numpy as np
+import sys
+import os
+
+# Add project root to path
+sys.path.append(os.path.dirname(os.path.dirname(__file__)))
+
 from stable_baselines3 import PPO
 
-from aero_eval import aero_score_multi
-from airfoil_env import AirfoilEnv
-
+from src.aerodynamics.legacy_eval import aero_score_multi
+from src.optimization.single_objective_env import AirfoilEnv
 
 def find_best_params(model, env, alphas, n_episodes=10):
     best_params = None
@@ -37,7 +42,16 @@ def main():
     alphas = np.array([0.0, 4.0, 8.0], dtype=np.float32)
 
     env = AirfoilEnv()
-    model = PPO.load("ppo_airfoil_fake", env=env)
+    # Path to model might need adjustment
+    model_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "models", "ppo_airfoil_fake")
+    if not os.path.exists(model_path + ".zip"):
+         model_path = "ppo_airfoil_fake" # Try local if above fails
+         
+    try:
+        model = PPO.load(model_path, env=env)
+    except:
+        print(f"Could not load model at {model_path}")
+        return
 
     # Baseline params (like NACA 2412-ish)
     base_params = np.array([0.02, 0.4, 0.12], dtype=np.float32)

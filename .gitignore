@@ -1,7 +1,9 @@
 # Byte-compiled / optimized / DLL files
 __pycache__/
-*.py[codz]
+*.py[cod]
 *$py.class
+*.pyc
+*.pyo
 
 # C extensions
 *.so
@@ -27,8 +29,6 @@ share/python-wheels/
 MANIFEST
 
 # PyInstaller
-#  Usually these files are written by a python script from a template
-#  before PyInstaller builds the exe, so as to inject date/other infos into it.
 *.manifest
 *.spec
 
@@ -48,6 +48,7 @@ coverage.xml
 *.cover
 *.py.cover
 .hypothesis/
+pytest_cache/
 .pytest_cache/
 cover/
 
@@ -205,3 +206,38 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# Project-specific files
+# Training results and logs
+results/figures/*.png
+results/figures/*.jpg
+results/figures/*.pdf
+results/tables/*.csv
+results/reports/*.pdf
+*.log
+system_check.log
+training_log*.txt
+
+# Trained models (large files)
+models/*.zip
+models/*.pth
+models/*.h5
+models/*.pkl
+
+# Development and temporary files
+archive/
+.vscode/settings.json
+.DS_Store
+Thumbs.db
+
+# CFD simulation files
+*.su2
+*.mesh
+*.cgns
+polar_file.txt
+airfoil_coordinates.dat
+
+# Backup files
+*.bak
+*~
+*.swp

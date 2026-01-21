@@ -1,0 +1,131 @@
+# ============================================================================
+# Airfoil RL Optimizer - Master Configuration
+# ============================================================================
+# Edit this file to customize training, CFD, and optimization settings.
+
+project:
+  name: "Airfoil RL Optimizer"
+  version: "2.0.0"
+  author: "Mohamed Noorul Naseem"
+
+# Reinforcement Learning Configuration
+rl:
+  algorithm: "PPO"
+  policy: "MlpPolicy"
+  total_timesteps: 100000
+  learning_rate: 0.0003
+  n_steps: 2048
+  batch_size: 64
+  n_epochs: 10
+  gamma: 0.99
+  gae_lambda: 0.95
+  clip_range: 0.2
+  ent_coef: 0.01
+  max_grad_norm: 0.5
+
+  # Environment settings
+  env:
+    max_steps: 40
+    include_manufacturing: true
+    strict_mode: false
+
+  # Multi-objective settings
+  multi_objective:
+    enabled: true
+    weights:
+      ld_ratio: 0.40
+      cl_max: 0.25
+      stability: 0.20
+      manufacturing: 0.15
+
+# Aerodynamic Evaluation
+aerodynamics:
+  # Primary solver (xfoil, su2, or surrogate)
+  primary_solver: "xfoil"
+  fallback_solver: "surrogate"
+
+  # XFOIL settings
+  xfoil:
+    path: "xfoil" # or full path
+    timeout: 30
+    max_iterations: 200
+
+  # SU2 settings (optional)
+  su2:
+    path: null
+    solver: "EULER"
+
+  # Flow conditions
+  reynolds: 1.0e6
+  mach: 0.0
+  alphas:
+    cruise: [0.0, 4.0, 8.0]
+    high_lift: [8.0, 10.0, 12.0]
+
+# Airfoil Parameterization
+airfoil:
+  # NACA 4-digit bounds
+  m_range: [0.00, 0.06] # Max camber
+  p_range: [0.10, 0.70] # Camber position
+  t_range: [0.08, 0.20] # Thickness
+
+  # Baseline (NACA 2412)
+  baseline:
+    m: 0.02
+    p: 0.40
+    t: 0.12
+
+  # Resolution for geometry generation
+  num_points: 200
+
+# Manufacturing Constraints
+manufacturing:
+  enabled: true
+
+  # Thickness constraints
+  min_thickness: 0.10
+  max_thickness: 0.20
+  optimal_thickness: 0.12
+
+  # Camber constraints
+  max_camber: 0.06
+
+  # Position constraints
+  min_camber_position: 0.15
+  max_camber_position: 0.60
+
+  # Penalty weight in reward
+  penalty_weight: 0.5
+
+# Aircraft Benchmarks
+benchmarks:
+  primary: "boeing_737_800"
+  comparison_list:
+    - "boeing_737_800"
+    - "airbus_a320neo"
+    - "boeing_787_9"
+    - "cessna_172"
+
+  # Fuel cost parameters
+  fuel_price_usd_kg: 0.80
+  annual_flight_hours: 3000
+  operational_life_years: 25
+
+# Output and Logging
+output:
+  model_dir: "models"
+  results_dir: "results"
+  log_tensorboard: true
+  save_frequency: 10000
+
+  # Figures
+  figure_format: "png"
+  figure_dpi: 300
+
+# PINN Surrogate Settings
+pinn:
+  enabled: true
+  hidden_layers: 4
+  hidden_units: 128
+  training_samples: 500
+  physics_weight: 0.1

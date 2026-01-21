@@ -1,0 +1,88 @@
+# ============================================================================
+# CFD Configuration
+# ============================================================================
+
+# Solver selection
+solver:
+  primary: xfoil
+  fallback: surrogate
+
+# XFOIL settings
+xfoil:
+  path: xfoil
+  timeout: 30
+  max_iterations: 200
+
+  # Panel settings
+  n_panels: 160
+  panel_bunching: 1.0
+
+  # Transition model
+  n_crit: 9.0
+
+# SU2 settings
+su2:
+  path: SU2_CFD
+  solver: EULER
+
+  # Mesh settings
+  mesh_size: medium
+
+  # Convergence
+  max_iterations: 1000
+  residual_target: 1e-8
+
+  # CFL
+  cfl_number: 10.0
+  cfl_adapt: true
+
+# PINN surrogate settings
+pinn:
+  enabled: true
+  hidden_layers: 4
+  hidden_units: 128
+  activation: tanh
+
+  # Training
+  training_samples: 500
+  epochs: 1000
+  learning_rate: 0.001
+
+  # Physics weight
+  physics_weight: 0.1
+  data_weight: 1.0
+
+# Flow conditions
+flow:
+  # Standard analysis
+  reynolds: 1.0e6
+  mach: 0.0
+
+  # Sweep ranges
+  alpha_sweep:
+    start: -4
+    end: 16
+    step: 1
+
+  reynolds_sweep:
+    - 1.0e5
+    - 5.0e5
+    - 1.0e6
+    - 3.0e6
+    - 6.0e6
+
+# Validation cases
+validation:
+  onera_m6:
+    mach: 0.8395
+    alpha: 3.06
+    reynolds: 11720000
+    reference_cl: 0.288
+    reference_cd: 0.0133
+
+  naca_0012_validation:
+    mach: 0.0
+    alpha: 4.0
+    reynolds: 3000000
+    reference_cl: 0.44
+    reference_cd: 0.0082

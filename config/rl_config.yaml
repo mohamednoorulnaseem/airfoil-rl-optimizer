@@ -1,0 +1,67 @@
+# ============================================================================
+# RL Configuration
+# ============================================================================
+
+algorithm: PPO
+policy: MlpPolicy
+
+# Training parameters
+training:
+  total_timesteps: 100000
+  learning_rate: 0.0003
+  n_steps: 2048
+  batch_size: 64
+  n_epochs: 10
+  gamma: 0.99
+  gae_lambda: 0.95
+  clip_range: 0.2
+  ent_coef: 0.01
+  max_grad_norm: 0.5
+
+  # Callbacks
+  eval_freq: 5000
+  n_eval_episodes: 10
+  save_freq: 10000
+
+# Environment settings
+environment:
+  max_steps: 40
+  include_manufacturing: true
+  strict_mode: false
+
+  # Parameter bounds
+  m_range: [0.00, 0.06]
+  p_range: [0.10, 0.70]
+  t_range: [0.08, 0.20]
+
+  # Baseline (NACA 2412)
+  baseline: [0.02, 0.40, 0.12]
+
+  # Angles of attack
+  alphas: [0.0, 4.0, 8.0]
+
+# Multi-objective settings
+multi_objective:
+  enabled: true
+  weights:
+    ld_ratio: 0.40
+    cl_max: 0.25
+    stability: 0.20
+    manufacturing: 0.15
+
+  # Pareto front tracking
+  pareto_tracking: true
+  max_pareto_size: 50
+
+# Network architecture
+network:
+  type: MlpPolicy
+  policy_layers: [64, 64]
+  value_layers: [64, 64]
+  activation: tanh
+
+# Logging
+logging:
+  tensorboard: true
+  log_dir: results/tensorboard
+  verbose: 1
