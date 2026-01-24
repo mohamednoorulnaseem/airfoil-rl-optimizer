@@ -1101,98 +1101,7 @@ git push origin feature/your-feature-name
 
 ---
 
-## 📚 Citation
-
-If you use this software in your research, please cite:
-
-### BibTeX
-
-```bibtex
-@software{naseem2026airfoil,
-  author       = {Naseem, Mohamed Noorul},
-  title        = {Airfoil RL Optimizer: Physics-Informed Reinforcement
-                  Learning for Aerospace Design Optimization},
-  year         = 2026,
-  publisher    = {GitHub},
-  url          = {https://github.com/mohamednoorulnaseem/airfoil-rl-optimizer},
-  version      = {2.0.0},
-  doi          = {10.5281/zenodo.XXXXXXX}
-}
-```
-
-### APA
-
-Naseem, M. N. (2026). _Airfoil RL Optimizer: Physics-Informed Reinforcement Learning for Aerospace Design Optimization_ (Version 2.0.0) [Computer software]. GitHub. https://github.com/mohamednoorulnaseem/airfoil-rl-optimizer
-
-### IEEE
-
-M. N. Naseem, "Airfoil RL Optimizer: Physics-Informed Reinforcement Learning for Aerospace Design Optimization," GitHub, 2026. [Online]. Available: https://github.com/mohamednoorulnaseem/airfoil-rl-optimizer
-
-### 📄 Related Publications
-
-_Coming soon - AIAA paper under review_
-
----
-
-## 🏆 Acknowledgments
-
-### 🙏 Special Thanks
-
-This project builds upon the incredible work of:
-
-- **[Mark Drela](https://web.mit.edu/drela/Public/web/xfoil/)** - XFOIL aerodynamic analysis
-- **[Juan J. Alonso](https://su2code.github.io/)** - Stanford SU2 CFD suite
-- **[Stable-Baselines3 Team](https://stable-baselines3.readthedocs.io/)** - RL framework
-- **[Maziar Raissi](https://maziarraissi.github.io/)** - Physics-Informed Neural Networks
-
-### 🎓 Academic Foundations
-
-Key papers that inspired this work:
-
-1. Schulman et al. (2017) - "Proximal Policy Optimization Algorithms"
-2. Drela (1989) - "XFOIL: An Analysis and Design System for Low Reynolds Number Airfoils"
-3. Economon et al. (2016) - "SU2: An Open-Source Suite for Multiphysics Simulation and Design"
-4. Raissi et al. (2019) - "Physics-informed neural networks: A deep learning framework"
-
-### 🌟 Open Source Dependencies
-
-<details>
-<summary><b>View full dependency list</b></summary>
-
-#### Core ML/RL
-
-- [PyTorch](https://pytorch.org/) - Deep learning framework
-- [Stable-Baselines3](https://stable-baselines3.readthedocs.io/) - RL algorithms
-- [Gymnasium](https://gymnasium.farama.org/) - RL environments
-- [NumPy](https://numpy.org/) - Numerical computing
-
-#### Scientific Computing
-
-- [SciPy](https://scipy.org/) - Scientific algorithms
-- [Matplotlib](https://matplotlib.org/) - Visualization
-- [Plotly](https://plotly.com/) - Interactive plots
-- [Pandas](https://pandas.pydata.org/) - Data analysis
-
-#### Web Interface
-
-- [Dash](https://dash.plotly.com/) - Interactive web apps
-- [Dash Bootstrap Components](https://dash-bootstrap-components.opensource.faculty.ai/) - UI components
-
-#### Configuration & Testing
-
-- [PyYAML](https://pyyaml.org/) - YAML parsing
-- [pytest](https://pytest.org/) - Testing framework
-- [Ruff](https://github.com/astral-sh/ruff) - Linting
-
-</details>
-
-### 💖 Supporters
-
-_Want to support this project? [Star it on GitHub](https://github.com/mohamednoorulnaseem/airfoil-rl-optimizer) ⭐_
-
----
-
-## 📱 Community & Support
+## Community & Support
 
 <div align="center">
 
@@ -1217,8 +1126,8 @@ _Thank you to all our amazing contributors!_
 ### 📢 Stay Updated
 
 - 🐙 **GitHub:** Watch this repo for updates
-- 💼 **LinkedIn:** [Follow Mohamed Noorul Naseem](https://linkedin.com/in/mohamednoorulnaseem)
-- 📧 **Email:** [mohamednoorulnaseem@example.com](mailto:mohamednoorulnaseem@example.com)
+- 💼 **LinkedIn:** [Mohamed Noorul Naseem](https://www.linkedin.com/in/mohamednoorulnaseem)
+- 📧 **Email:** [noorulnaseem11@gmail.com](mailto:noorulnaseem11@gmail.com)
 
 ### ❓ FAQ
 
@@ -1300,8 +1209,8 @@ furnished to do so, subject to the following conditions:
 _B.Tech - Artificial Intelligence & Data Science | ML Enthusiast | Open Source Contributor_
 
 [![GitHub](https://img.shields.io/badge/GitHub-mohamednoorulnaseem-181717?style=flat-square&logo=github)](https://github.com/mohamednoorulnaseem)
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-0077B5?style=flat-square&logo=linkedin)](https://linkedin.com/in/mohamednoorulnaseem)
-[![Email](https://img.shields.io/badge/Email-Contact-D14836?style=flat-square&logo=gmail&logoColor=white)](mailto:mohamednoorulnaseem@example.com)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-0077B5?style=flat-square&logo=linkedin)](https://www.linkedin.com/in/mohamednoorulnaseem)
+[![Email](https://img.shields.io/badge/Email-Contact-D14836?style=flat-square&logo=gmail&logoColor=white)](mailto:noorulnaseem11@gmail.com)
 
 ---
 
