@@ -23,8 +23,21 @@ import os
 # Add parent path for imports
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 
-from aero_eval import aero_score_multi
-from manufacturing_constraints import check_manufacturability, get_manufacturing_penalty
+from src.aerodynamics.legacy_eval import aero_score_multi
+from src.validation.manufacturing import ManufacturabilityChecker
+
+# Helper function for manufacturing compatibility
+def check_manufacturability(m, p, t):
+    """Check if airfoil can be manufactured."""
+    checker = ManufacturabilityChecker()
+    coords = checker._generate_airfoil_coords(m, p, t)
+    return checker.check_constraints(coords)
+
+def get_manufacturing_penalty(m, p, t):
+    """Get manufacturing penalty score."""
+    result = check_manufacturability(m, p, t)
+    return 0.0 if result['overall_feasible'] else 0.5
+
 
 
 @dataclass

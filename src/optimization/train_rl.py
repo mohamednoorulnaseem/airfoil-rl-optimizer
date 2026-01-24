@@ -6,24 +6,21 @@ airfoil geometry for multi-objective performance.
 """
 
 import os
+import sys
+
+# Ensure src is in path
+sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
+
 from src.optimization.rl_agent import AirfoilRLAgent
-try:
-    from src.optimization.multi_objective_env import MultiObjectiveAirfoilEnv as AirfoilEnv
-except ImportError:
-    # Fallback/Compat if relative import fails or file missing
-    import sys
-    sys.path.append(os.path.dirname(__file__))
-    try:
-        from src.optimization.multi_objective_env import MultiObjectiveAirfoilEnv as AirfoilEnv
-    except ImportError:    
-        from airfoil_env import AirfoilEnv
+from src.optimization.airfoil_env import AirfoilEnvXFOIL as AirfoilEnv
 
 def main():
     # Ensure models dir exists
     os.makedirs("models", exist_ok=True)
     
     print("Initializing Multi-Objective Environment...")
-    env = AirfoilEnv()
+    # Use Surrogate Model for training (60x faster)
+    env = AirfoilEnv(use_xfoil=False)
     
     print("Creating PPO Agent...")
     # Initialize agent wrapper

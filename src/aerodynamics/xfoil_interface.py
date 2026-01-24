@@ -1,238 +1,233 @@
 """
-XFOIL Interface - Production Grade
-
-High-level interface for XFOIL aerodynamic analysis.
-Provides clean API for the RL optimizer.
-
-Author: Mohamed Noorul Naseem
+XFOIL CFD Interface
+Real aerodynamic analysis for airfoils
 """
 
 import subprocess
-import tempfile
 import os
 import numpy as np
 from pathlib import Path
-from typing import Dict, List, Tuple, Optional
+import re
 
-
-class XFOILAnalyzer:
+class XFOILRunner:
     """
-    XFOIL CFD analyzer for airfoil performance.
-    
-    Features:
-    - Automatic XFOIL detection
-    - Validated surrogate fallback
-    - Polar sweep capability
-    - Transition prediction
+    Python wrapper for XFOIL CFD solver
     """
     
-    def __init__(self, xfoil_path: str = "xfoil", timeout: int = 30):
-        self.xfoil_path = xfoil_path
-        self.timeout = timeout
-        self.available = self._check_available()
-        
-        if not self.available:
-            print("⚠️ XFOIL not found. Using validated surrogate model.")
-    
-    def _check_available(self) -> bool:
-        """Check if XFOIL is installed."""
-        try:
-            result = subprocess.run(
-                [self.xfoil_path],
-                input=b"QUIT\n",
-                capture_output=True,
-                timeout=5
-            )
-            return True
-        except:
-            return False
-    
-    def analyze(
-        self,
-        m: float, p: float, t: float,
-        alpha: float = 4.0,
-        reynolds: float = 1e6,
-        mach: float = 0.0
-    ) -> Dict:
+    def __init__(self, reynolds=1e6, mach=0.0, n_iter=100):
         """
-        Analyze NACA airfoil at given conditions.
-        
-        Returns dict with Cl, Cd, Cm, L/D, and source.
+        Args:
+            reynolds: Reynolds number (1e6 = typical small aircraft)
+            mach: Mach number (0.0-0.3 for low speed)
+            n_iter: Max iterations for convergence
         """
-        if self.available:
-            return self._run_xfoil(m, p, t, alpha, reynolds, mach)
-        else:
-            return self._surrogate(m, p, t, alpha, reynolds)
-    
-    def _run_xfoil(
-        self, m, p, t, alpha, reynolds, mach
-    ) -> Dict:
-        """Run actual XFOIL analysis."""
-        # Generate NACA designation
-        m_int = int(m * 100)
-        p_int = int(p * 10)
-        t_int = int(t * 100)
-        naca = f"{m_int}{p_int}{t_int:02d}"
+        self.reynolds = reynolds
+        self.mach = mach
+        self.n_iter = n_iter
+        self.temp_dir = Path("./temp_xfoil")
+        self.temp_dir.mkdir(exist_ok=True)
         
-        with tempfile.TemporaryDirectory() as tmpdir:
-            polar_file = os.path.join(tmpdir, "polar.txt")
+        # Find XFOIL executable
+        self.xfoil_path = self._find_xfoil()
+    
+    def _find_xfoil(self):
+        """Find XFOIL executable in various locations"""
+        # Check common locations
+        possible_paths = [
+            Path(__file__).parent.parent.parent / "scripts" / "xfoil.exe",  # scripts folder
+            Path(__file__).parent.parent.parent / "xfoil.exe",  # project root
+            Path("scripts/xfoil.exe"),  # relative scripts
+            Path("xfoil.exe"),  # current directory
+        ]
+        
+        for path in possible_paths:
+            if path.exists():
+                return str(path.absolute())
+        
+        # Fall back to system PATH
+        return "xfoil"
+        
+    def analyze_airfoil(self, airfoil_coords, alpha_range=None):
+        """
+        Run XFOIL analysis for given airfoil
+        
+        Args:
+            airfoil_coords: numpy array of shape (N, 2) with x, y coordinates
+            alpha_range: list of angles of attack (degrees)
             
-            commands = f"""
-NACA {naca}
+        Returns:
+            dict with cl, cd, cm for each alpha
+        """
+        if alpha_range is None:
+            alpha_range = [0.0, 2.0, 4.0, 6.0, 8.0]
+        
+        # Write airfoil coordinates to file
+        airfoil_file = self.temp_dir / "airfoil.dat"
+        self._write_airfoil(airfoil_coords, airfoil_file)
+        
+        # Create XFOIL command file
+        polar_file = self.temp_dir / "polar.txt"
+        commands = self._create_commands(airfoil_file, polar_file, alpha_range)
+        
+        # Run XFOIL
+        success = self._run_xfoil(commands)
+        
+        if not success:
+            return None
+        
+        # Parse results
+        results = self._parse_polar(polar_file)
+        
+        return results
+    
+    def _write_airfoil(self, coords, filename):
+        """Write airfoil coordinates to file"""
+        with open(filename, 'w') as f:
+            f.write(f"Generated Airfoil\n")
+            for x, y in coords:
+                f.write(f"  {x:10.6f}  {y:10.6f}\n")
+    
+    def _create_commands(self, airfoil_file, polar_file, alpha_range):
+        """
+        Create XFOIL command sequence
+        """
+        commands = f"""
+LOAD {airfoil_file}
+
 PANE
+
 OPER
-VISC {reynolds:.0f}
-MACH {mach}
-ITER 150
+VISC {self.reynolds}
+MACH {self.mach}
+ITER {self.n_iter}
+
 PACC
 {polar_file}
 
-ALFA {alpha}
 
-QUIT
 """
-            try:
-                result = subprocess.run(
-                    [self.xfoil_path],
-                    input=commands.encode(),
-                    capture_output=True,
-                    timeout=self.timeout
-                )
-                
-                return self._parse_polar(polar_file, alpha)
-                
-            except subprocess.TimeoutExpired:
-                return self._surrogate(m, p, t, alpha, reynolds)
-            except Exception as e:
-                return self._surrogate(m, p, t, alpha, reynolds)
+        
+        # Add each angle of attack
+        for alpha in alpha_range:
+            commands += f"ALFA {alpha}\n"
+        
+        commands += "\n\nQUIT\n"
+        
+        return commands
     
-    def _parse_polar(self, filename: str, alpha: float) -> Dict:
-        """Parse XFOIL polar output."""
+    def _run_xfoil(self, commands):
+        """
+        Execute XFOIL with given commands
+        """
         try:
-            if not os.path.exists(filename):
-                raise FileNotFoundError
+            process = subprocess.run(
+                [self.xfoil_path],
+                input=commands.encode(),
+                capture_output=True,
+                timeout=30,
+                cwd=str(self.temp_dir)
+            )
             
-            with open(filename, 'r') as f:
-                lines = f.readlines()
+            # Check if polar file was created
+            polar_file = self.temp_dir / "polar.txt"
+            return polar_file.exists()
             
-            # Skip header, find data
-            for line in lines:
-                parts = line.split()
-                if len(parts) >= 5:
-                    try:
-                        a = float(parts[0])
-                        if abs(a - alpha) < 0.1:
-                            cl = float(parts[1])
-                            cd = float(parts[2])
-                            cm = float(parts[4]) if len(parts) > 4 else 0.0
-                            
-                            return {
-                                'Cl': cl,
-                                'Cd': cd, 
-                                'Cm': cm,
-                                'L/D': cl / (cd + 1e-8),
-                                'source': 'XFOIL',
-                                'converged': True
-                            }
-                    except ValueError:
-                        continue
-            
-            raise ValueError("No valid data found")
-            
-        except Exception:
-            # Fallback
-            return self._surrogate(0.02, 0.4, 0.12, alpha, 1e6)
+        except subprocess.TimeoutExpired:
+            print("XFOIL timeout - airfoil may not have converged")
+            return False
+        except Exception as e:
+            print(f"XFOIL error: {e}")
+            return False
     
-    def _surrogate(
-        self, m: float, p: float, t: float,
-        alpha: float, reynolds: float
-    ) -> Dict:
-        """Validated surrogate model."""
-        alpha_rad = np.radians(alpha)
+    def _parse_polar(self, polar_file):
+        """
+        Parse XFOIL polar output file
         
-        # Lift (thin airfoil + corrections)
-        cl_alpha = 2 * np.pi * (1 + 0.77 * t)
-        alpha_zl = -1.15 * m * 100
-        cl = cl_alpha * np.radians(alpha - alpha_zl)
+        Returns:
+            list of dicts with alpha, cl, cd, cm, etc.
+        """
+        if not polar_file.exists():
+            return []
         
-        # Stall
-        if alpha > 10 + 4 * t / 0.12:
-            cl *= np.exp(-0.15 * (alpha - 10 - 4 * t / 0.12))
-        cl = np.clip(cl, -0.5, 1.8)
+        results = []
         
-        # Drag
-        cf = 0.074 / (reynolds ** 0.2)
-        cd = 2 * cf * (1 + 2 * t + 60 * t**4)
-        cd += cl**2 / (np.pi * 6 * 0.95)
-        cd += 0.001 * (m / 0.01)**2
-        cd = max(cd, 0.005)
+        with open(polar_file, 'r') as f:
+            lines = f.readlines()
         
-        cm = -0.025 - 0.1 * m
-        
-        return {
-            'Cl': float(cl),
-            'Cd': float(cd),
-            'Cm': float(cm),
-            'L/D': float(cl / cd),
-            'source': 'surrogate',
-            'converged': True
-        }
-    
-    def polar_sweep(
-        self, m: float, p: float, t: float,
-        alphas: List[float] = None,
-        reynolds: float = 1e6
-    ) -> Dict[str, List]:
-        """Run polar sweep across angles."""
-        if alphas is None:
-            alphas = list(np.arange(-4, 16, 1))
-        
-        results = {
-            'alpha': [],
-            'Cl': [],
-            'Cd': [],
-            'L/D': [],
-            'source': []
-        }
-        
-        for alpha in alphas:
-            data = self.analyze(m, p, t, alpha, reynolds)
-            results['alpha'].append(alpha)
-            results['Cl'].append(data['Cl'])
-            results['Cd'].append(data['Cd'])
-            results['L/D'].append(data['L/D'])
-            results['source'].append(data['source'])
+        # Find data section (starts after header)
+        data_started = False
+        for line in lines:
+            # Skip header lines
+            if '---' in line:
+                data_started = True
+                continue
+            
+            if not data_started:
+                continue
+            
+            # Parse data line
+            # Format: alpha  CL  CD  CDp  CM  Top_Xtr  Bot_Xtr
+            parts = line.split()
+            
+            if len(parts) >= 7:
+                try:
+                    results.append({
+                        'alpha': float(parts[0]),
+                        'cl': float(parts[1]),
+                        'cd': float(parts[2]),
+                        'cdp': float(parts[3]),    # Pressure drag
+                        'cm': float(parts[4]),     # Pitching moment
+                        'top_xtr': float(parts[5]), # Top transition
+                        'bot_xtr': float(parts[6])  # Bottom transition
+                    })
+                except ValueError:
+                    continue
         
         return results
-
-
-# Singleton instance
-_analyzer = None
-
-def get_analyzer() -> XFOILAnalyzer:
-    """Get or create XFOIL analyzer."""
-    global _analyzer
-    if _analyzer is None:
-        _analyzer = XFOILAnalyzer()
-    return _analyzer
-
-
-def quick_analysis(m, p, t, alpha=4.0, re=1e6):
-    """Quick single-point analysis."""
-    analyzer = get_analyzer()
-    result = analyzer.analyze(m, p, t, alpha, re)
-    return result['Cl'], result['Cd'], result['L/D']
-
-
-if __name__ == "__main__":
-    print("Testing XFOIL Interface...")
     
-    analyzer = XFOILAnalyzer()
-    print(f"XFOIL available: {analyzer.available}")
+    def get_ld_max(self, airfoil_coords):
+        """
+        Find maximum L/D ratio
+        """
+        results = self.analyze_airfoil(airfoil_coords)
+        
+        if not results:
+            return None
+        
+        # Calculate L/D for each point
+        ld_ratios = [(r['cl'] / r['cd'], r['alpha']) for r in results if r['cd'] > 0]
+        
+        if not ld_ratios:
+            return None
+        
+        max_ld, alpha_for_max_ld = max(ld_ratios, key=lambda x: x[0])
+        
+        return {
+            'ld_max': max_ld,
+            'alpha_for_ld_max': alpha_for_max_ld,
+            'all_results': results
+        }
     
-    result = analyzer.analyze(0.02, 0.4, 0.12, alpha=4.0)
-    print(f"\nNACA 2412 @ α=4°:")
-    print(f"  Cl = {result['Cl']:.4f}")
-    print(f"  Cd = {result['Cd']:.5f}")
-    print(f"  L/D = {result['L/D']:.1f}")
-    print(f"  Source: {result['source']}")
+    def cleanup(self):
+        """Remove temporary files"""
+        import shutil
+        if self.temp_dir.exists():
+            shutil.rmtree(self.temp_dir)
+
+
+# Convenience function
+def run_xfoil_quick(airfoil_coords, alpha=4.0, reynolds=1e6):
+    """
+    Quick XFOIL analysis at single angle of attack
+    
+    Returns: cl, cd, ld
+    """
+    xfoil = XFOILRunner(reynolds=reynolds)
+    results = xfoil.analyze_airfoil(airfoil_coords, alpha_range=[alpha])
+    xfoil.cleanup()
+    
+    if results and len(results) > 0:
+        r = results[0]
+        return r['cl'], r['cd'], r['cl']/r['cd']
+    else:
+        return None, None, None

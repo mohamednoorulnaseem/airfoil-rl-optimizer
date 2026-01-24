@@ -1,0 +1,83 @@
+{
+  "Boeing 737-800": {
+    "manufacturer": "Boeing",
+    "type": "Narrow-body airliner",
+    "wing": {
+      "airfoil": "NACA 23012 derivative (supercritical)",
+      "root_airfoil": {
+        "m": 0.023,
+        "p": 0.3,
+        "t": 0.12,
+        "description": "Modified NACA 23012"
+      },
+      "tip_airfoil": {
+        "m": 0.012,
+        "p": 0.3,
+        "t": 0.1
+      },
+      "span_m": 35.79,
+      "area_m2": 124.6,
+      "aspect_ratio": 10.26
+    },
+    "performance": {
+      "cruise_mach": 0.785,
+      "cruise_altitude_ft": 37000,
+      "cruise_ld": 17.5,
+      "max_range_km": 5436,
+      "typical_fuel_consumption_kg_hr": 2500
+    },
+    "economics": {
+      "fuel_capacity_liters": 26020,
+      "typical_fuel_burn_per_flight_kg": 7500,
+      "annual_utilization_hours": 3000,
+      "aircraft_lifetime_years": 25,
+      "fuel_price_usd_per_kg": 0.7
+    },
+    "fleet": {
+      "in_service_worldwide": 4991,
+      "major_operators": ["Southwest Airlines", "Ryanair", "United Airlines"]
+    }
+  },
+  "Airbus A320neo": {
+    "manufacturer": "Airbus",
+    "type": "Narrow-body airliner",
+    "wing": {
+      "airfoil": "Advanced supercritical",
+      "root_airfoil": {
+        "m": 0.025,
+        "p": 0.35,
+        "t": 0.13
+      }
+    },
+    "performance": {
+      "cruise_mach": 0.78,
+      "cruise_ld": 18.2,
+      "typical_fuel_consumption_kg_hr": 2200
+    },
+    "economics": {
+      "annual_utilization_hours": 3000,
+      "fuel_price_usd_per_kg": 0.7
+    }
+  },
+  "Boeing 787-8": {
+    "manufacturer": "Boeing",
+    "type": "Wide-body airliner",
+    "wing": {
+      "airfoil": "Advanced supercritical with raked wingtips",
+      "root_airfoil": {
+        "m": 0.028,
+        "p": 0.4,
+        "t": 0.14
+      }
+    },
+    "performance": {
+      "cruise_mach": 0.85,
+      "cruise_ld": 20.0,
+      "typical_fuel_consumption_kg_hr": 5400
+    },
+    "economics": {
+      "annual_utilization_hours": 4000,
+      "fuel_price_usd_per_kg": 0.7
+    }
+  }
+}
