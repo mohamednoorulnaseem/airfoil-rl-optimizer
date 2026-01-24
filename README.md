@@ -829,29 +829,7 @@ Visit: http://localhost:8050
 
 ### Screenshots
 
-<div align="center">
-
-#### 🎛️ Main Dashboard - Aerodynamic Analysis
-
-<img src="assets/dashboard_main.png" alt="Dashboard Main View" width="100%"/>
-
-_Real-time airfoil optimization with interactive parameter controls, XFOIL CFD analysis, and comprehensive aerodynamic visualizations including airfoil shape, lift/drag curves, polar diagram, and L/D efficiency charts._
-
----
-
-#### ✈️ Aircraft Comparison - Boeing 737-800
-
-<img src="assets/dashboard_comparison.png" alt="Boeing 737 Comparison" width="100%"/>
-
-_Direct comparison against Boeing 737-800 wing section showing +40.8% L/D improvement, 28.9% drag reduction, $1.2M annual savings per aircraft, and $1.6B fleet lifetime savings potential._
-
----
-
-#### 📊 Performance Metrics - XFOIL CFD Results
-
-<img src="assets/dashboard_metrics.png" alt="Performance Metrics Table" width="100%"/>
-
-_Detailed XFOIL analysis metrics table with lift coefficients, drag coefficients, L/D ratios, and moment coefficients across multiple angles of attack. Summary statistics highlight Max L/D: 45.2 at α=4.0° and Max Cl: 0.982 at α=10.0°._
+See the **Key Results** section at the top for visualization examples, or run the dashboard locally to explore all features.
 
 </div>
 
@@ -1319,7 +1297,7 @@ furnished to do so, subject to the following conditions:
 ### 👨‍💻 Author
 
 **Mohamed Noorul Naseem**  
-_Aerospace ML Engineer | CFD Enthusiast | Open Source Contributor_
+_B.Tech - Artificial Intelligence & Data Science | ML Enthusiast | Open Source Contributor_
 
 [![GitHub](https://img.shields.io/badge/GitHub-mohamednoorulnaseem-181717?style=flat-square&logo=github)](https://github.com/mohamednoorulnaseem)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-0077B5?style=flat-square&logo=linkedin)](https://linkedin.com/in/mohamednoorulnaseem)
